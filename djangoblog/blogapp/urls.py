@@ -8,6 +8,6 @@ urlpatterns = [
     path('topic/<name>', views.getTopic, name="topic"),
     path('login', views.getLogin, name="login"),
     path('logout', views.getLogout, name="logout"),
-    path('create', views.create, name="create")
-
+    path('create_post', views.createpost, name="create_post"),
+    path('profile', views.getProfile,name="profile")
 ]

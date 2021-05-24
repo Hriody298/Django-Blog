@@ -1,9 +1,11 @@
+from os import name
 from django.shortcuts import render,HttpResponse,get_object_or_404,redirect
 from .models import author,category,article
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db.models import Q
+from .forms import createForm
 
 
 # Create your views here.
@@ -78,5 +80,29 @@ def getLogout(request):
     return redirect("index")
 
 
-def create(request):
-    return render(request, "create.html")
+def createpost(request):
+    if request.user.is_authenticated:
+        form = createForm(request.POST or None, request.FILES or None)
+        u = get_object_or_404(author, name=request.user.id)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.article_author=u
+            instance.save()
+            return redirect('index')
+        return render(request, "create_post.html", {"form": form})
+    else:
+        return redirect("login")
+
+
+def getProfile(request):
+    if request.user.is_authenticated:
+        user = get_object_or_404(author, name=request.user.id)
+        post = article.objects.filter(article_author=request.user.id)
+        context={
+            "post": post,
+            "auth": user
+        }
+        return render(request, "logged_profile.html", context)
+    else:
+        return redirect("login")
+

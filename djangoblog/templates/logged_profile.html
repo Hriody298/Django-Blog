@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block stylesheet %}{% endblock %}
+{% block profile %}
+    <div class="fh5co-bio">
+        <figure>
+            <img src="{{ auth.profile_picture.url }}" alt="Free HTML5 Bootstrap Template" class="img-responsive">
+        </figure>
+        <h3 class="heading">About Me</h3>
+        <h2>{{ auth.name.get_full_name }}</h2>
+        <p>{{ auth.details }}</p>
+        <ul class="fh5co-social">
+            <li><a href="https://twitter.com/faz_lul_hridoy"><i class="icon-twitter"></i></a></li>
+            <li><a href="https://www.facebook.com/hridoy.fazlul"><i class="icon-facebook"></i></a></li>
+            <li><a href="https://www.instagram.com/faz_lul_hridoy"><i class="icon-instagram"></i></a></li>
+        </ul>
+    </div>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <td>Title</td>
+                    <td>Posted On</td>
+                    <td>Action</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in post %}
+                <tr>
+                    <td>{{ p.title }}</td>
+                    <td>{{ p.posted_on }}</td>
+                    <td><a href="">Edit</a>||<a href="">Delete</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+{% block script %}
+{% endblock %}
