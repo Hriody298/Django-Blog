@@ -67,7 +67,7 @@ def getLogin(request):
     else:
         if request.method == "POST":
             user = request.POST.get("user")
-            password = request.POST.get("pass")
+            password = request.POST.get("password")
             auth = authenticate(request, password=password, username=user)
             if auth is not None:
                 login(request, auth)
@@ -98,11 +98,7 @@ def getProfile(request):
     if request.user.is_authenticated:
         user = get_object_or_404(author, name=request.user.id)
         post = article.objects.filter(article_author=request.user.id)
-        context={
-            "post": post,
-            "auth": user
-        }
-        return render(request, "logged_profile.html", context)
+        return render(request, "logged_profile.html", {"post": post, "user": user})
     else:
         return redirect("login")
 

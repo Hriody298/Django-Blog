@@ -33,3 +33,5 @@ class article(models.Model):
 
 
 
+
+
