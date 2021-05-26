@@ -9,5 +9,7 @@ urlpatterns = [
     path('login', views.getLogin, name="login"),
     path('logout', views.getLogout, name="logout"),
     path('create_post', views.createpost, name="create_post"),
-    path('profile', views.getProfile,name="profile")
+    path('profile', views.getProfile,name="profile"),
+    path('update/<int:pid>', views.getUpdate, name="update"),
+    path('delete/<int:pid>', views.getDelete, name="delete")
 ]
