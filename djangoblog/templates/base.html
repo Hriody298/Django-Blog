@@ -73,7 +73,7 @@
 				<h3 class="heading">Menu</h3>
 				<ul>
 					<li><a href="#">Blog</a></li>
-					<li><a href="{% url 'create_post' %}">Create new post</a></li>
+					<li><a href="{% url 'register' %}">Registraion</a></li>
 					{% if request.user.is_authenticated %}
 						<li><a href="{% url 'profile' %}">Profile</a></li>
 						<li><a href="{% url 'logout' %}">Logout</a></li>

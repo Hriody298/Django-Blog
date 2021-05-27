@@ -5,7 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db.models import Q
-from .forms import createForm
+from .forms import createForm,RegistrationForm,GetAuthor
+from django.contrib import messages
 
 
 # Create your views here.
@@ -72,6 +73,10 @@ def getLogin(request):
             if auth is not None:
                 login(request, auth)
                 return redirect("index")
+            else:
+                messages.add_message(request, messages.ERROR, 'Username or password error.')
+                return redirect("login")
+
     return render(request, "login.html")
 
 
@@ -88,7 +93,8 @@ def createpost(request):
             instance = form.save(commit=False)
             instance.article_author=user
             instance.save()
-            return redirect('index')
+            messages.success(request, 'New post created.')
+            return redirect('profile')
         return render(request, "create_post.html", {"form": form})
     else:
         return redirect("login")
@@ -96,9 +102,21 @@ def createpost(request):
 
 def getProfile(request):
     if request.user.is_authenticated:
-        user = get_object_or_404(author, name=request.user.id)
-        post = article.objects.filter(article_author=user.id)
-        return render(request, "logged_profile.html", {"post": post, "user": user})
+        user = get_object_or_404(User, id=request.user.id)
+        author_profile=author.objects.filter(name=user.id)
+        if author_profile:
+            author_user=get_object_or_404(author, name=request.user.id)
+            post = article.objects.filter(article_author=author_user.id)
+            return render(request, "logged_profile.html", {"post": post, "user": author_user})
+        else:
+            form=GetAuthor(request.POST or None,request.FILES or None)
+            if form.is_valid():
+                instance=form.save(commit=False)
+                instance.name=user
+                instance.save()
+                messages.success(request, 'Author created successfully')
+                return redirect("profile")
+            return render(request, "create_author.html",{"form": form})
     else:
         return redirect("login")
 
@@ -113,6 +131,7 @@ def getUpdate(request,pid):
             instance = form.save(commit=False)
             instance.article_author=user
             instance.save()
+            messages.success(request, 'Post details updated.')
             return redirect('profile')
         return render(request, "create_post.html", {"form": form})
     else:
@@ -123,6 +142,20 @@ def getDelete(request,pid):
     if request.user.is_authenticated:
         post = get_object_or_404(article, id=pid)
         post.delete()
+        messages.warning(request, 'Post has been deleted.')
         return redirect('profile')
     else:
         return redirect("login")
+
+
+def getRegister(request):
+    form=RegistrationForm(request.POST or None)
+    if form.is_valid():
+        instance=form.save(commit=False)
+        instance.save()
+        messages.success(request, 'Registration successfully done.')
+        return redirect('profile')
+    context={
+        "form": form
+    }
+    return render(request, 'register.html', context)
