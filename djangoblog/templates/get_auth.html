@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}{% endblock %}
+{% block title %}
+
+{% endblock %}
 {% block stylesheet %}{% endblock %}
 {% block profile %}
     <div class="fh5co-bio">
@@ -26,26 +28,22 @@
     </div>
     {% endif %}
     <div class="container">
-        <h2>Posts Of: {{user.name.get_full_name}}</h2>
+        <h2>Author Table:</h2>
     </div>
     <div class="container">
-        <a href="{% url 'create_post' %}" class="btn btn-primary pull pull-right">Create New Post</a>
+        <a href="{% url 'add_author' %}" class="btn btn-primary pull pull-right">Add Author</a>
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <td>Title</td>
-                    <td>Posted On</td>
-                    <td>Updated On</td>
+                    <td>Authors</td>
                     <td>Action</td>
                 </tr>
             </thead>
             <tbody>
-                {% for obj in post %}
+                {% for obj in auth %}
                 <tr>
-                    <td>{{ obj.title }}</td>
-                    <td>{{ obj.posted_on }}</td>
-                    <td>{{ obj.updated_on }}</td>
-                    <td><a href="{% url 'update' pid=obj.id %}" class="btn btn-warning">Edit</a> <a href="{% url 'delete' pid=obj.id %}" class="btn btn-danger">Delete</a></td>
+                    <td>{{ obj.name.get_full_name }}</td>
+                    <td><a href="{% url 'author_update' uid=obj.id %}" class="btn btn-warning btn-sm">Edit</a> <a href="{% url 'author_delete' uid=obj.id %}" class="btn btn-danger btn-sm">Delete</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -53,5 +51,6 @@
     </div>
 {% endblock %}
 {% block script %}
+
 {% endblock %}
 

@@ -3,18 +3,20 @@
 {% block title %}Welcome to Django-Blog{% endblock %}
 {% block stylesheet %}{% endblock %}
 {% block content %}
-	{% for obj in post %}
-		<article class="col-lg-3 col-md-3 col-sm-3 col-xs-6 col-xxs-12 animate-box">
-			<figure>
-				<a href="{% url 'single-post' id=obj.id %}"><img src="{{ obj.image.url }}" alt="Image" class="img-responsive"></a>
-			</figure>
-			<span class="fh5co-meta"><a href="{% url 'topic' name=obj.category.name %}">{{ obj.category.name }}</a></span>
-			<h2 class="fh5co-article-title"><a href="{% url 'single-post' id=obj.id %}">{{ obj.title }}</a></h2>
-			<h4><a href="{% url 'author' name=obj.article_author.name.username %}">{{ obj.article_author.name.get_full_name }}</a> </h4>
-			<span class="fh5co-meta fh5co-date">{{ obj.posted_on }}</span>
-		</article>
-		<div class="clearfix visible-xs-block"></div>
-	{% endfor %}
+	<div class="conatiner-fluid">
+		{% for obj in post %}
+			<article class="col-lg-3 col-md-3 col-sm-3 col-xs-6 col-xxs-12 animate-box">
+				<figure>
+					<a href="{% url 'single-post' id=obj.id %}"><img src="{{ obj.image.url }}" alt="Image" class="img-responsive"></a>
+				</figure>
+				<span class="fh5co-meta"><a href="{% url 'topic' name=obj.category.name %}">{{ obj.category.name }}</a></span>
+				<h2 class="fh5co-article-title"><a href="{% url 'single-post' id=obj.id %}">{{ obj.title }}</a></h2>
+				<h4><a href="{% url 'author' name=obj.article_author.name.username %}">{{ obj.article_author.name.get_full_name }}</a> </h4>
+				<span class="fh5co-meta fh5co-date">{{ obj.posted_on }}</span>
+			</article>
+			<div class="clearfix visible-xs-block"></div>
+		{% endfor %}
+	</div>
 	<div class="container-fluid">
 		<div class="pagination">
 			<span class="step-links">

@@ -12,5 +12,13 @@ urlpatterns = [
     path('profile', views.getProfile,name="profile"),
     path('update/<int:pid>', views.getUpdate, name="update"),
     path('delete/<int:pid>', views.getDelete, name="delete"),
-    path('register', views.getRegister, name="register")
+    path('register', views.getRegister, name="register"),
+    path('auth', views.getAuth, name="auth"),
+    path('author_update<int:uid>', views.AuthorUpdate, name="author_update"),
+    path('author_delte<int:uid>', views.AuthorDelete, name="author_delete"),
+    path('add_author', views.AddAuthor, name="add_author"),
+    path('category', views.getCategory, name="category"),
+    path('create_category', views.CreateCategory, name="create_category"),
+    path('delete_category<int:qid>', views.DeleteCategory, name="delete_category"),
+    path('update_category<int:qid>', views.UpdateCategory, name="update_category")
 ]

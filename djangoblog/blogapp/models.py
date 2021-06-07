@@ -10,7 +10,6 @@ class author(models.Model):
     def __str__(self):
         return self.name.username
 
-
 class category(models.Model):
     name = models.CharField(max_length=100)
 
@@ -30,6 +29,15 @@ class article(models.Model):
     def __str__(self):
         return  self.title
 
+
+class comment(models.Model):
+    post = models.ForeignKey(article, on_delete=models.CASCADE)
+    name = models.ForeignKey(User, on_delete=models.CASCADE)
+    email = models.EmailField(max_length=100)
+    post_comment = models.TextField(max_length=200)
+
+    def __str__(self):
+        return self.post.title
 
 
 

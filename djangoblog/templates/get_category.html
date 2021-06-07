@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Blog Categories
+{% endblock %}
+{% block stylesheet %}{% endblock %}
+{% block profile %}{% endblock %}
+{% block content %}
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class="container">
+        <h1>Blog Categories</h1>
+    </div>
+    <div class="container">
+        {% if request.user.is_staff %}
+            <a href="{% url 'create_category' %}" class="btn btn-primary pull pull-right">Create New Category</a>
+        {% endif %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <td>Category Name</td>
+                    <td>Action</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for obj in cat %}
+                <tr>
+                    <td><a href="{% url 'topic' name=obj.name %}">{{ obj.name }}</a></td>
+                    {% if request.user.is_staff %}
+                        <td><a href="{% url 'update_category' qid=obj.id %}" class="btn btn-warning">Edit</a> <a href="{% url 'delete_category' qid=obj.id %}" class="btn btn-danger">Delete</a></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+{% block script %}
+
+{% endblock %}

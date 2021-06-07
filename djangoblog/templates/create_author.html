@@ -1,17 +1,20 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-
+Create New Author
 {% endblock %}
 {% block stylesheet %}{% endblock %}
 {% block profile %}{% endblock %}
 {% block content %}
-    <div class="container-fluid">
-        <form action="" method="POST">
+    <div class="panel panel-default">
+      <div class="panel-heading">Create New author</div>
+      <table class="table">
+          <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
-            <button class="btn btn-success">Create Author</button>
+            <button class="btn btn-success" type="submit">Create Author</button>
         </form>
+      </table>
     </div>
 {% endblock %}
 {% block script %}

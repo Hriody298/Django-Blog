@@ -23,3 +23,10 @@ class categoryModel(admin.ModelAdmin):
     class Meta:
         Model = category
 admin.site.register(category, categoryModel)
+
+class commentModel(admin.ModelAdmin):
+    list_display = ["__str__"]
+    search_fields = ["__str__"]
+    class Meta:
+        Model = comment
+admin.site.register(comment, commentModel)

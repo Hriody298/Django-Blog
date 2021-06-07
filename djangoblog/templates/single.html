@@ -43,9 +43,33 @@
 						</div>
 					</div>
 				</div>
-
-
 			</article>
+		</div>
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+			<h3 class="panel-title">Comments</h3>
+		  </div>
+		  <div class="panel-body">
+			{% for comment in show_comment %}
+				<h4>Name : {{ comment.name.get_full_name }}</h4>
+				<h4>Email : {{ comment.email }}</h4>
+				<h3>Comment : {{ comment.post_comment }}</h3>
+			  {% empty %}
+			  <p>Sorry! No comments.</p>
+			{% endfor %}
+		  </div>
+		</div>
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+			<h3 class="panel-title">Post your comment</h3>
+		  </div>
+		  <div class="panel-body">
+			<form action="#" method="POST">
+				{% csrf_token %}
+				{{ form.as_p }}
+				<button type="submit" class="btn btn-primary">Comment</button>
+			</form>
+		  </div>
 		</div>
 		<div class="container">
 			<h3 class="well">Related Posts</h3>

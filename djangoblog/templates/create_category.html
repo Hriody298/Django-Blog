@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Category Create Form
+{% endblock %}
+{% block stylesheet %}{% endblock %}
+{% block profile %}{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-success">Create Category</button>
+        </form>
+    </div>
+{% endblock %}
+{% block script %}
+
+{% endblock %}

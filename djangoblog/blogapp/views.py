@@ -1,11 +1,11 @@
 from os import name
 from django.shortcuts import render,HttpResponse,get_object_or_404,redirect
-from .models import author,category,article
+from .models import author,category,article,comment
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db.models import Q
-from .forms import createForm,RegistrationForm,GetAuthor
+from .forms import createForm,RegistrationForm,GetAuthor,GetComment,UpdateAuthor,CategoryForm
 from django.contrib import messages
 
 
@@ -39,15 +39,26 @@ def getauthor(request, name):
 
 
 def getsingle(request, id):
+    user = get_object_or_404(User, id=request.user.id)
     post = get_object_or_404(article, pk=id)
     first = article.objects.first()
     last = article.objects.last()
     related = article.objects.filter(category=post.category).exclude(id=id)[:4]
+    show_comment = comment.objects.filter(post=id)
+    form = GetComment(request.POST or None)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.name = user
+        instance.post = post
+        instance.save()
     context = {
         "first": first,
         "last": last,
         "post": post,
-        "related":related
+        "related": related,
+        "form": form,
+        "show_comment": show_comment
+
     }
     return render(request, "single.html",context)
 
@@ -109,14 +120,14 @@ def getProfile(request):
             post = article.objects.filter(article_author=author_user.id)
             return render(request, "logged_profile.html", {"post": post, "user": author_user})
         else:
-            form=GetAuthor(request.POST or None,request.FILES or None)
+            form = GetAuthor(request.POST or None, request.FILES or None)
             if form.is_valid():
-                instance=form.save(commit=False)
-                instance.name=user
+                instance = form.save(commit=False)
+                instance.name = user
                 instance.save()
                 messages.success(request, 'Author created successfully')
                 return redirect("profile")
-            return render(request, "create_author.html",{"form": form})
+            return render(request, "create_author.html", {"form": form})
     else:
         return redirect("login")
 
@@ -151,7 +162,7 @@ def getDelete(request,pid):
 def getRegister(request):
     form=RegistrationForm(request.POST or None)
     if form.is_valid():
-        instance=form.save(commit=False)
+        instance = form.save(commit=False)
         instance.save()
         messages.success(request, 'Registration successfully done.')
         return redirect('profile')
@@ -159,3 +170,81 @@ def getRegister(request):
         "form": form
     }
     return render(request, 'register.html', context)
+
+
+def getAuth(request):
+    if request.user.is_staff:
+        auth = author.objects.all()
+        user = get_object_or_404(author, id=request.user.id)
+        context={
+            "auth": auth,
+            "user": user,
+        }
+        return render(request, 'get_auth.html', context)
+
+
+def AuthorUpdate(request,uid):
+    auth_user = get_object_or_404(author, id=uid)
+    form = UpdateAuthor(request.POST or None, request.FILES or None, instance=auth_user)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.save()
+        messages.success(request,'Author successfully updated')
+        return redirect('auth')
+    return render(request, 'author_update.html', {"form": form})
+
+
+def AuthorDelete(request,uid):
+    if request.user.is_staff:
+        auth_user = get_object_or_404(author, id=uid)
+        auth_user.delete()
+        messages.success(request, 'Author successfully deleted.')
+        return redirect('auth')
+
+
+def AddAuthor(request):
+    form = UpdateAuthor(request.POST or None, request.FILES or None)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.save()
+        messages.success(request, 'Author created successfully')
+        return redirect('auth')
+    return render(request, 'create_author.html',{"form": form})
+
+
+def getCategory(request):
+    categories = category.objects.all()
+    return render(request, 'get_category.html', {"cat": categories})
+
+
+def CreateCategory(request):
+    if request.user.is_staff:
+        form = CategoryForm(request.POST or None)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.save()
+            messages.success(request, 'New category added.')
+            return redirect('category')
+        return render(request, 'create_category.html',{"form": form})
+    else:
+        messages.warning(request, 'login as an staff.')
+        return redirect('login')
+ 
+
+
+def DeleteCategory(request,qid):
+    delete_cat = get_object_or_404(category, id=qid)
+    delete_cat.delete()
+    messages.success(request, 'Category successfully deleted.')
+    return redirect('category')
+
+
+def UpdateCategory(request,qid):
+    cat = get_object_or_404(category, id=qid)
+    form = CategoryForm(request.FILES or None, instance=cat)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.save()
+        messages.success(request, 'Category successfully updated')
+        return redirect('category')
+    return render(request,'update_category.html',{"form": form})
